@@ -132,6 +132,20 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
+@theme inline {
+  --font-display: "Libre Baskerville", Georgia, "Times New Roman", serif;
+  --font-sans: "Libre Franklin", "Helvetica Neue", Arial, sans-serif;
+  --color-rule: var(--rule);
+}
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.16 0.004 260);
+  --muted-foreground: oklch(0.52 0.005 260);
+  --accent: oklch(0.45 0.16 250);
+  --rule: oklch(0.88 0.003 260);
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
@@ -140,5 +154,44 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@utility font-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+@utility kicker {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+@utility section-title {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--foreground);
+}
+
+@utility link-underline {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+
+  &:hover {
+    color: var(--accent);
+    text-decoration-color: var(--accent);
   }
 }

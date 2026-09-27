@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Post listings come from the public Blogger Atom feed of jornalwebdigital.blogspot.com, fetched in `src/lib/blog.functions.ts` server functions — avoids browser CORS limits and keeps the archive always current.

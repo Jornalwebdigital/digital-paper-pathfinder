@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SitemapYearIndexRouteImport } from './routes/sitemap.$year.index'
+import { Route as SitemapYearMonthRouteImport } from './routes/sitemap.$year.$month'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapYearIndexRoute = SitemapYearIndexRouteImport.update({
+  id: '/sitemap/$year/',
+  path: '/sitemap/$year/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapYearMonthRoute = SitemapYearMonthRouteImport.update({
+  id: '/sitemap/$year/$month',
+  path: '/sitemap/$year/$month',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/sitemap/$year/$month': typeof SitemapYearMonthRoute
+  '/sitemap/$year/': typeof SitemapYearIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/sitemap/$year/$month': typeof SitemapYearMonthRoute
+  '/sitemap/$year': typeof SitemapYearIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/sitemap/$year/$month': typeof SitemapYearMonthRoute
+  '/sitemap/$year/': typeof SitemapYearIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/sitemap/$year/$month' | '/sitemap/$year/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/sitemap/$year/$month' | '/sitemap/$year'
+  id: '__root__' | '/' | '/sitemap/$year/$month' | '/sitemap/$year/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SitemapYearMonthRoute: typeof SitemapYearMonthRoute
+  SitemapYearIndexRoute: typeof SitemapYearIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sitemap/$year/': {
+      id: '/sitemap/$year/'
+      path: '/sitemap/$year'
+      fullPath: '/sitemap/$year/'
+      preLoaderRoute: typeof SitemapYearIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap/$year/$month': {
+      id: '/sitemap/$year/$month'
+      path: '/sitemap/$year/$month'
+      fullPath: '/sitemap/$year/$month'
+      preLoaderRoute: typeof SitemapYearMonthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SitemapYearMonthRoute: SitemapYearMonthRoute,
+  SitemapYearIndexRoute: SitemapYearIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
