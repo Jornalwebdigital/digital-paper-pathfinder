@@ -12,7 +12,7 @@ export const Route = createFileRoute("/")({
         content:
           "Jornal Web Digital site map: browse the complete news archive by year, month, and day.",
       },
-      { property: "og:title", content: "Site Map | Jornal Web Digital" },
+      { property: "og:title", content: "Site Maps | Jornal Web Digital" },
       {
         property: "og:description",
         content: "The complete Jornal Web Digital news archive by year, month, and day.",
