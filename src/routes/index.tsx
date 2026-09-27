@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArchiveSearch } from "@/components/archive-search";
+import { AdBanner } from '@/components/AdBanner';
 
 const YEARS = Array.from({ length: 2026 - 2013 + 1 }, (_, i) => 2026 - i);
 
