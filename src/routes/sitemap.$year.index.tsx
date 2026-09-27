@@ -15,7 +15,7 @@ const MONTHS = [
   "Dezembro",
 ];
 
-export const Route = createFileRoute("/sitemap/$year")({
+export const Route = createFileRoute("/sitemap/$year/")({
   head: ({ params }) => ({
     meta: [
       { title: `Mapa do Site ${params.year} | Jornal Web Digital` },
