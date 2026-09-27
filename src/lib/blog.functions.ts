@@ -33,7 +33,7 @@ async function fetchRange(min: string, max: string, limit = 800): Promise<Post[]
   while (out.length < limit) {
     const res = await fetch(
       feedUrl({
-        "max-results": "150",
+        "max-results": "500",
         "start-index": String(start),
         "published-min": min,
         "published-max": max,
@@ -42,8 +42,8 @@ async function fetchRange(min: string, max: string, limit = 800): Promise<Post[]
     if (!res.ok) break;
     const batch = parseEntries(await res.json());
     out.push(...batch);
-    if (batch.length < 150) break;
-    start += 150;
+    if (batch.length < 500) break;
+    start += 500;
   }
   return out;
 }
@@ -63,21 +63,4 @@ export const getMonthPosts = createServerFn({ method: "GET" })
     const posts = await fetchRange(min, max);
     posts.sort((a, b) => a.published.localeCompare(b.published));
     return posts;
-  });
-
-export const getYearMonthCounts = createServerFn({ method: "GET" })
-  .inputValidator((data) => z.object({ year: z.number().int() }).parse(data))
-  .handler(async ({ data }) => {
-    const { year } = data;
-    const posts = await fetchRange(
-      `${year}-01-01T00:00:00-03:00`,
-      `${year + 1}-01-01T00:00:00-03:00`,
-      20000,
-    );
-    const counts: number[] = Array(12).fill(0);
-    for (const p of posts) {
-      const m = Number(p.published.slice(5, 7));
-      if (m >= 1 && m <= 12) counts[m - 1]! += 1;
-    }
-    return counts;
   });
