@@ -18,7 +18,7 @@ function parseEntries(json: any): Post[] {
   const entries = json?.feed?.entry ?? [];
   return entries.map((e: any) => ({
     id: e.id?.$t ?? "",
-    title: (e.title?.$t ?? "").trim() || "(sem título)",
+    title: (e.title?.$t ?? "").trim() || "(untitled)",
     url:
       (e.link ?? []).find((l: any) => l.rel === "alternate")?.href ??
       BLOG,
@@ -63,4 +63,23 @@ export const getMonthPosts = createServerFn({ method: "GET" })
     const posts = await fetchRange(min, max);
     posts.sort((a, b) => a.published.localeCompare(b.published));
     return posts;
+  });
+
+export const searchPosts = createServerFn({ method: "GET" })
+  .inputValidator((data) => z.object({ query: z.string() }).parse(data))
+  .handler(async ({ data }) => {
+    const query = data.query.trim().slice(0, 120);
+    if (query.length < 2) return [];
+
+    const res = await fetch(
+      feedUrl({
+        q: query,
+        "max-results": "100",
+      }),
+    );
+    if (!res.ok) return [];
+
+    return parseEntries(await res.json()).sort((a, b) =>
+      b.published.localeCompare(a.published),
+    );
   });

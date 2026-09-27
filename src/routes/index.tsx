@@ -1,20 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArchiveSearch } from "@/components/archive-search";
 
 const YEARS = Array.from({ length: 2026 - 2013 + 1 }, (_, i) => 2026 - i);
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Mapa do Site | Jornal Web Digital" },
+      { title: "Site Map | Jornal Web Digital" },
       {
         name: "description",
         content:
-          "Mapa do site do Jornal Web Digital: navegue pelo arquivo completo de notícias por ano, mês e dia.",
+          "Jornal Web Digital site map: browse the complete news archive by year, month, and day.",
       },
-      { property: "og:title", content: "Mapa do Site | Jornal Web Digital" },
+      { property: "og:title", content: "Site Map | Jornal Web Digital" },
       {
         property: "og:description",
-        content: "Arquivo completo de notícias do Jornal Web Digital por ano, mês e dia.",
+        content: "The complete Jornal Web Digital news archive by year, month, and day.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -28,15 +29,16 @@ function SitemapIndex() {
     <main className="mx-auto max-w-3xl px-6 py-14">
       <header className="border-b border-rule pb-6">
         <p className="kicker">Jornal Web Digital</p>
-        <h1 className="mt-3 font-display text-5xl leading-none tracking-tight">Mapa do Site</h1>
+        <h1 className="mt-3 font-display text-5xl leading-none tracking-tight">Site Map</h1>
         <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
-          Todo o conteúdo publicado no Jornal Web Digital, organizado por ano, mês e dia. Escolha um
-          ano para começar.
+          All content published by Jornal Web Digital, organized by year, month, and day. Choose a
+          year to begin.
         </p>
+        <ArchiveSearch />
       </header>
 
       <section className="mt-10">
-        <h2 className="section-title">Arquivo por ano</h2>
+        <h2 className="section-title">Archive by year</h2>
         <ul className="mt-5 grid grid-cols-2 gap-x-10 sm:grid-cols-3">
           {YEARS.map((y) => (
             <li key={y} className="border-b border-rule">
@@ -53,11 +55,11 @@ function SitemapIndex() {
       </section>
 
       <section className="mt-12 border-t border-rule pt-6">
-        <h2 className="section-title">Seções do blog</h2>
+        <h2 className="section-title">Blog sections</h2>
         <ul className="mt-4 space-y-2 text-sm">
           {[
-            ["Página inicial", "https://jornalwebdigital.blogspot.com/"],
-            ["Feed de notícias (Atom)", "https://jornalwebdigital.blogspot.com/feeds/posts/default"],
+            ["Home page", "https://jornalwebdigital.blogspot.com/"],
+            ["News feed (Atom)", "https://jornalwebdigital.blogspot.com/feeds/posts/default"],
             ["Sitemap XML", "https://jornalwebdigital.blogspot.com/sitemap.xml"],
           ].map(([label, href]) => (
             <li key={href}>
