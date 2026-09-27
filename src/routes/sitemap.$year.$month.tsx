@@ -1,19 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArchiveSearch } from "@/components/archive-search";
 import { getMonthPosts, type Post } from "@/lib/blog.functions";
 
 const MONTHS = [
-  "Janeiro",
-  "Fevereiro",
-  "Março",
-  "Abril",
-  "Maio",
-  "Junho",
-  "Julho",
-  "Agosto",
-  "Setembro",
-  "Outubro",
-  "Novembro",
-  "Dezembro",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 export const Route = createFileRoute("/sitemap/$year/$month")({
@@ -22,18 +23,18 @@ export const Route = createFileRoute("/sitemap/$year/$month")({
       data: { year: Number(params.year), month: Number(params.month) },
     }),
   head: ({ params }) => {
-    const label = `${MONTHS[Number(params.month) - 1] ?? params.month} de ${params.year}`;
+    const label = `${MONTHS[Number(params.month) - 1] ?? params.month} ${params.year}`;
     return {
       meta: [
-        { title: `Mapa do Site — ${label} | Jornal Web Digital` },
+        { title: `Site Map — ${label} | Jornal Web Digital` },
         {
           name: "description",
-          content: `Todas as notícias publicadas pelo Jornal Web Digital em ${label}, listadas por dia.`,
+          content: `All Jornal Web Digital stories published in ${label}, listed by day.`,
         },
-        { property: "og:title", content: `Mapa do Site — ${label} | Jornal Web Digital` },
+        { property: "og:title", content: `Site Map — ${label} | Jornal Web Digital` },
         {
           property: "og:description",
-          content: `Notícias do Jornal Web Digital em ${label}, dia a dia.`,
+          content: `Jornal Web Digital stories from ${label}, organized by day.`,
         },
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },
@@ -61,7 +62,7 @@ function MonthPage() {
     <main className="mx-auto max-w-3xl px-6 py-14">
       <nav className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
         <Link to="/" className="link-underline">
-          Mapa do Site
+          Site Map
         </Link>
         <span className="px-2">/</span>
         <Link to="/sitemap/$year" params={{ year }} className="link-underline">
@@ -77,19 +78,20 @@ function MonthPage() {
         </h1>
         <p className="mt-3 text-sm text-muted-foreground">
           {posts.length === 0
-            ? "Nenhuma publicação encontrada neste mês."
-            : `${posts.length} publicaç${posts.length === 1 ? "ão" : "ões"} em ${days.length} dia${days.length === 1 ? "" : "s"}.`}
+            ? "No posts were found for this month."
+            : `${posts.length} ${posts.length === 1 ? "post" : "posts"} across ${days.length} ${days.length === 1 ? "day" : "days"}.`}
         </p>
+        <ArchiveSearch />
       </header>
 
       <div className="mt-10 space-y-10">
         {days.map((day) => (
           <section key={day}>
             <h2 className="section-title border-b border-rule pb-2">
-              {Number(day.slice(8, 10))} de {monthName}
+              {monthName} {Number(day.slice(8, 10))}
             </h2>
             <ul className="mt-4 space-y-3">
-              {byDay.get(day)!.map((p) => (
+              {(byDay.get(day) ?? []).map((p) => (
                 <li key={p.id} className="leading-snug">
                   <a href={p.url} className="link-underline" rel="noreferrer">
                     {p.title}
