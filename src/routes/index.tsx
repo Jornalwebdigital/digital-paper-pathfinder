@@ -35,6 +35,10 @@ function SitemapIndex() {
           All content published by Jornal Web Digital, organized by year, month, and day. Choose a
           year to begin.
         </p>
+
+        {/* Banner de anúncio adicionado acima da pesquisa */}
+        <AdBanner />
+
         <ArchiveSearch />
       </header>
 
