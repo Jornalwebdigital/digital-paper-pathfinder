@@ -1,24 +1,73 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+const YEARS = Array.from({ length: 2026 - 2013 + 1 }, (_, i) => 2026 - i);
+
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "Mapa do Site | Jornal Web Digital" },
+      {
+        name: "description",
+        content:
+          "Mapa do site do Jornal Web Digital: navegue pelo arquivo completo de notícias por ano, mês e dia.",
+      },
+      { property: "og:title", content: "Mapa do Site | Jornal Web Digital" },
+      {
+        property: "og:description",
+        content: "Arquivo completo de notícias do Jornal Web Digital por ano, mês e dia.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  component: SitemapIndex,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function SitemapIndex() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <main className="mx-auto max-w-3xl px-6 py-14">
+      <header className="border-b border-rule pb-6">
+        <p className="kicker">Jornal Web Digital</p>
+        <h1 className="mt-3 font-display text-5xl leading-none tracking-tight">Mapa do Site</h1>
+        <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
+          Todo o conteúdo publicado no Jornal Web Digital, organizado por ano, mês e dia. Escolha um
+          ano para começar.
+        </p>
+      </header>
+
+      <section className="mt-10">
+        <h2 className="section-title">Arquivo por ano</h2>
+        <ul className="mt-5 grid grid-cols-2 gap-x-10 sm:grid-cols-3">
+          {YEARS.map((y) => (
+            <li key={y} className="border-b border-rule">
+              <Link
+                to="/sitemap/$year"
+                params={{ year: String(y) }}
+                className="block py-3 font-display text-2xl transition-colors hover:text-accent"
+              >
+                {y}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="mt-12 border-t border-rule pt-6">
+        <h2 className="section-title">Seções do blog</h2>
+        <ul className="mt-4 space-y-2 text-sm">
+          {[
+            ["Página inicial", "https://jornalwebdigital.blogspot.com/"],
+            ["Feed de notícias (Atom)", "https://jornalwebdigital.blogspot.com/feeds/posts/default"],
+            ["Sitemap XML", "https://jornalwebdigital.blogspot.com/sitemap.xml"],
+          ].map(([label, href]) => (
+            <li key={href}>
+              <a href={href} className="link-underline" rel="noreferrer">
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </main>
   );
 }
