@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SitemapYearRouteImport } from './routes/sitemap.$year'
+import { Route as SitemapYearMonthRouteImport } from './routes/sitemap.$year.$month'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +23,39 @@ const SitemapYearRoute = SitemapYearRouteImport.update({
   path: '/sitemap/$year',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapYearMonthRoute = SitemapYearMonthRouteImport.update({
+  id: '/$month',
+  path: '/$month',
+  getParentRoute: () => SitemapYearRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/sitemap/$year': typeof SitemapYearRoute
+  '/sitemap/$year': typeof SitemapYearRouteWithChildren
+  '/sitemap/$year/$month': typeof SitemapYearMonthRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/sitemap/$year': typeof SitemapYearRoute
+  '/sitemap/$year': typeof SitemapYearRouteWithChildren
+  '/sitemap/$year/$month': typeof SitemapYearMonthRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/sitemap/$year': typeof SitemapYearRoute
+  '/sitemap/$year': typeof SitemapYearRouteWithChildren
+  '/sitemap/$year/$month': typeof SitemapYearMonthRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/sitemap/$year'
+  fullPaths: '/' | '/sitemap/$year' | '/sitemap/$year/$month'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/sitemap/$year'
-  id: '__root__' | '/' | '/sitemap/$year'
+  to: '/' | '/sitemap/$year' | '/sitemap/$year/$month'
+  id: '__root__' | '/' | '/sitemap/$year' | '/sitemap/$year/$month'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  SitemapYearRoute: typeof SitemapYearRoute
+  SitemapYearRoute: typeof SitemapYearRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +74,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapYearRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sitemap/$year/$month': {
+      id: '/sitemap/$year/$month'
+      path: '/$month'
+      fullPath: '/sitemap/$year/$month'
+      preLoaderRoute: typeof SitemapYearMonthRouteImport
+      parentRoute: typeof SitemapYearRoute
+    }
   }
 }
 
+interface SitemapYearRouteChildren {
+  SitemapYearMonthRoute: typeof SitemapYearMonthRoute
+}
+
+const SitemapYearRouteChildren: SitemapYearRouteChildren = {
+  SitemapYearMonthRoute: SitemapYearMonthRoute,
+}
+
+const SitemapYearRouteWithChildren = SitemapYearRoute._addFileChildren(
+  SitemapYearRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  SitemapYearRoute: SitemapYearRoute,
+  SitemapYearRoute: SitemapYearRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
