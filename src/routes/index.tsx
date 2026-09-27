@@ -6,13 +6,13 @@ const YEARS = Array.from({ length: 2026 - 2013 + 1 }, (_, i) => 2026 - i);
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Site Map | Jornal Web Digital" },
+      { title: "Site MapS | Jornal Web Digital" },
       {
         name: "description",
         content:
           "Jornal Web Digital site map: browse the complete news archive by year, month, and day.",
       },
-      { property: "og:title", content: "Site Maps | Jornal Web Digital" },
+      { property: "og:title", content: "Site Map | Jornal Web Digital" },
       {
         property: "og:description",
         content: "The complete Jornal Web Digital news archive by year, month, and day.",
