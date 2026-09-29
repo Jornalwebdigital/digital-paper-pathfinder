@@ -60,6 +60,9 @@ function SitemapIndex() {
             </li>
           ))}
         </ul>
+
+        {/* Bloco de anúncio 3 — abaixo dos anos */}
+        <AdBanner />
       </section>
 
       <section className="mt-12 border-t border-rule pt-6">

@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
 
-type Job = { bannerRef: React.RefObject<HTMLDivElement | null>; width: number };
+type Job = { container: HTMLDivElement; width: number };
 
-// The ad script reads the global `atOptions` when it executes, so multiple
-// banners must be configured and loaded one at a time — not in parallel.
+// The ad script writes its iframe via document.read-time globals, so banners
+// must be configured and loaded ONE at a time — not in parallel.
 const queue: Job[] = [];
 let running = false;
 
@@ -14,6 +14,15 @@ function runNext() {
     return;
   }
   running = true;
+
+  const container = job.container;
+  const doc = document as Document & { write: (html: string) => void };
+  const originalWrite = doc.write.bind(doc);
+
+  // Capture what the ad script writes and place it inside this banner's slot.
+  doc.write = (html: string) => {
+    container.innerHTML = html;
+  };
 
   const confScript = document.createElement('script');
   confScript.type = 'text/javascript';
@@ -30,28 +39,15 @@ function runNext() {
   const loadScript = document.createElement('script');
   loadScript.type = 'text/javascript';
   loadScript.src = '//www.highrevenueformat.com/c2f484876794ac0d5180d900c7c12375/invoke.js';
-  // The ad renders via document.write into the current script's position,
-  // so move the banner div right before the script executes.
-  if (job.bannerRef.current && job.bannerRef.current.parentNode) {
-    const placeholder = document.createComment('ad-slot');
-    job.bannerRef.current.replaceWith(placeholder);
-    document.currentScript?.after;
-    loadScript.onload = () => {
-      // restore the div container after the ad writes itself
-      placeholder.replaceWith(job.bannerRef.current!);
-      runNext();
-    };
-    loadScript.onerror = () => {
-      placeholder.replaceWith(job.bannerRef.current!);
-      runNext();
-    };
-  } else {
-    loadScript.onload = runNext;
-    loadScript.onerror = runNext;
-  }
+  const finish = () => {
+    doc.write = originalWrite;
+    setTimeout(runNext, 50);
+  };
+  loadScript.onload = finish;
+  loadScript.onerror = finish;
 
-  job.bannerRef.current?.appendChild(confScript);
-  job.bannerRef.current?.appendChild(loadScript);
+  container.appendChild(confScript);
+  container.appendChild(loadScript);
 }
 
 export const AdBanner = ({ width = 790 }: { width?: number }) => {
@@ -59,7 +55,7 @@ export const AdBanner = ({ width = 790 }: { width?: number }) => {
 
   useEffect(() => {
     if (bannerRef.current && !bannerRef.current.firstChild) {
-      queue.push({ bannerRef, width });
+      queue.push({ container: bannerRef.current, width });
       if (!running) runNext();
     }
   }, []);
