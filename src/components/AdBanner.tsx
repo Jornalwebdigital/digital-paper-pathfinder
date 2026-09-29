@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react';
 
 type Job = { container: HTMLDivElement; width: number };
 
-// The ad script writes its iframe via document.read-time globals, so banners
-// must be configured and loaded ONE at a time — not in parallel.
+// The ad script writes its iframe via document.write and global `atOptions`,
+// so banners must be configured and loaded ONE at a time — not in parallel.
 const queue: Job[] = [];
 let running = false;
 
