@@ -3,7 +3,7 @@ import { ArchiveSearch } from "@/components/archive-search";
 import { searchPosts } from "@/lib/blog.functions";
 
 const searchSchema = (search: Record<string, unknown>) => ({
-  q: typeof search.q === "string" ? search.q : "",
+  q: typeof search["q"] === "string" ? search["q"] : "",
 });
 
 const formatPublishedDate = (published: string) => {
