@@ -36,10 +36,13 @@ function SitemapIndex() {
           year to begin.
         </p>
 
-        {/* Banner de anúncio adicionado acima da pesquisa */}
+        {/* Bloco de anúncio 1 — acima da pesquisa */}
         <AdBanner />
 
         <ArchiveSearch />
+
+        {/* Bloco de anúncio 2 — abaixo da pesquisa */}
+        <AdBanner />
       </header>
 
       <section className="mt-10">
