@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArchiveSearch } from "@/components/archive-search";
+import { AdBanner } from "@/components/AdBanner";
 
 const MONTHS = [
   "January",
@@ -40,7 +41,7 @@ function YearPage() {
   const { year } = Route.useParams();
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-14">
+    <main className="mx-auto max-w-4xl px-6 py-14">
       <nav className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
         <Link to="/" className="link-underline">
           Site Map
@@ -53,7 +54,9 @@ function YearPage() {
         {year}
       </h1>
 
+      <AdBanner placement="aboveSearch" />
       <ArchiveSearch />
+      <AdBanner placement="belowSearch" />
 
       <ul className="mt-8 grid grid-cols-2 gap-x-10 sm:grid-cols-3">
         {MONTHS.map((name, i) => (
@@ -68,6 +71,7 @@ function YearPage() {
           </li>
         ))}
       </ul>
+      <AdBanner placement="belowContent" />
     </main>
   );
 }
