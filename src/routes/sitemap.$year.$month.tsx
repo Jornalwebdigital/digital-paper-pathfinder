@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArchiveSearch } from "@/components/archive-search";
+import { AdBanner } from "@/components/AdBanner";
 import { getMonthPosts, type Post } from "@/lib/blog.functions";
 
 const MONTHS = [
@@ -59,7 +60,7 @@ function MonthPage() {
   const days = [...byDay.keys()].sort();
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-14">
+    <main className="mx-auto max-w-4xl px-6 py-14">
       <nav className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
         <Link to="/" className="link-underline">
           Site Map
@@ -81,7 +82,9 @@ function MonthPage() {
             ? "No posts were found for this month."
             : `${posts.length} ${posts.length === 1 ? "post" : "posts"} across ${days.length} ${days.length === 1 ? "day" : "days"}.`}
         </p>
+        <AdBanner placement="aboveSearch" />
         <ArchiveSearch />
+        <AdBanner placement="belowSearch" />
       </header>
 
       <div className="mt-10 space-y-10">
@@ -107,6 +110,7 @@ function MonthPage() {
           </section>
         ))}
       </div>
+      <AdBanner placement="belowContent" />
     </main>
   );
 }

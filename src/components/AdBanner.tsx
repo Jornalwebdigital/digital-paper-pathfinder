@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
+import { AD_UNITS, type AdPlacement, type AdUnit } from '@/config/more-ads';
 
-type Job = { container: HTMLDivElement; width: number };
+type Job = { container: HTMLDivElement; unit: AdUnit };
 
 // The ad script writes its iframe via document.write and global `atOptions`,
 // so banners must be configured and loaded ONE at a time — not in parallel.
@@ -16,6 +17,11 @@ function runNext() {
   running = true;
 
   const container = job.container;
+  if (!container.isConnected) {
+    running = false;
+    runNext();
+    return;
+  }
   const doc = document as Document & { write: (html: string) => void };
   const originalWrite = doc.write.bind(doc);
 
@@ -28,17 +34,17 @@ function runNext() {
   confScript.type = 'text/javascript';
   confScript.innerHTML = `
     atOptions = {
-      'key' : 'c2f484876794ac0d5180d900c7c12375',
+      'key' : ${JSON.stringify(job.unit.key)},
       'format' : 'iframe',
-      'height' : 90,
-      'width' : ${job.width},
-      'params' : {}
+      'height' : ${job.unit.height},
+      'width' : ${job.unit.width},
+      'params' : ${JSON.stringify(job.unit.params)}
     };
   `;
 
   const loadScript = document.createElement('script');
   loadScript.type = 'text/javascript';
-  loadScript.src = '//www.highrevenueformat.com/c2f484876794ac0d5180d900c7c12375/invoke.js';
+  loadScript.src = job.unit.scriptSrc;
   const finish = () => {
     doc.write = originalWrite;
     setTimeout(runNext, 50);
@@ -50,19 +56,24 @@ function runNext() {
   container.appendChild(loadScript);
 }
 
-export const AdBanner = ({ width = 790 }: { width?: number }) => {
+export const AdBanner = ({ placement }: { placement: AdPlacement }) => {
   const bannerRef = useRef<HTMLDivElement>(null);
+  const unit = AD_UNITS[placement];
 
   useEffect(() => {
     if (bannerRef.current && !bannerRef.current.firstChild) {
-      queue.push({ container: bannerRef.current, width });
+      queue.push({ container: bannerRef.current, unit });
       if (!running) runNext();
     }
-  }, []);
+  }, [unit]);
 
   return (
-    <div className="flex justify-center items-center my-4 min-h-[90px] w-full overflow-hidden">
-      <div ref={bannerRef} style={{ width }} />
+    <div
+      className="my-5 flex w-full items-center justify-center overflow-x-auto"
+      style={{ minHeight: unit.height }}
+      aria-label="Advertisement"
+    >
+      <div ref={bannerRef} style={{ width: unit.width, minWidth: unit.width }} />
     </div>
   );
 };

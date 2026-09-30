@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Post listings come from the public Blogger Atom feed of jornalwebdigital.blogspot.com, fetched in `src/lib/blog.functions.ts` server functions — avoids browser CORS limits and keeps the archive always current.
+- Keep every ad network key, script URL, size, and placement in `src/config/more-ads.ts` — one central edit updates ads across all archive routes.

@@ -27,7 +27,7 @@ export const Route = createFileRoute("/")({
 
 function SitemapIndex() {
   return (
-    <main className="mx-auto max-w-3xl px-6 py-14">
+    <main className="mx-auto max-w-4xl px-6 py-14">
       <header className="border-b border-rule pb-6">
         <p className="kicker">Jornal Web Digital</p>
         <h1 className="mt-3 font-display text-5xl leading-none tracking-tight">Site Map</h1>
@@ -37,12 +37,12 @@ function SitemapIndex() {
         </p>
 
         {/* Bloco de anúncio 1 — acima da pesquisa */}
-        <AdBanner />
+        <AdBanner placement="aboveSearch" />
 
         <ArchiveSearch />
 
         {/* Bloco de anúncio 2 — abaixo da pesquisa */}
-        <AdBanner />
+        <AdBanner placement="belowSearch" />
       </header>
 
       <section className="mt-10">
@@ -62,7 +62,7 @@ function SitemapIndex() {
         </ul>
 
         {/* Bloco de anúncio 3 — abaixo dos anos */}
-        <AdBanner />
+        <AdBanner placement="belowContent" />
       </section>
 
       <section className="mt-12 border-t border-rule pt-6">

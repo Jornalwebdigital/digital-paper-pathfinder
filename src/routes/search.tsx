@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArchiveSearch } from "@/components/archive-search";
+import { AdBanner } from "@/components/AdBanner";
 import { searchPosts } from "@/lib/blog.functions";
 
 const searchSchema = (search: Record<string, unknown>) => ({
@@ -47,7 +48,7 @@ function SearchPage() {
   const query = q.trim();
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-14">
+    <main className="mx-auto max-w-4xl px-6 py-14">
       <nav className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
         <Link to="/" className="link-underline">
           Site Map
@@ -58,7 +59,9 @@ function SearchPage() {
 
       <header className="mt-4 border-b border-rule pb-8">
         <h1 className="font-display text-5xl leading-none tracking-tight">Search the Archive</h1>
+        <AdBanner placement="aboveSearch" />
         <ArchiveSearch defaultValue={q} />
+        <AdBanner placement="belowSearch" />
       </header>
 
       <section className="mt-10">
@@ -90,6 +93,7 @@ function SearchPage() {
           </>
         )}
       </section>
+      <AdBanner placement="belowContent" />
     </main>
   );
 }
